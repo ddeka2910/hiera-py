@@ -47,8 +47,8 @@ class HieraClient(object):
             """
             return '='.join((key, repr(getattr(self, key, None))))
 
-        params_list = map(kv_str,
-                          ['config_filename', 'hiera_binary', 'environment'])
+        params_list = list(map(kv_str,
+                              ['config_filename', 'hiera_binary', 'environment']))
         params_string = ', '.join(params_list)
         return '{0}({1})'.format(self.__class__.__name__, params_string)
 
@@ -78,8 +78,8 @@ class HieraClient(object):
                '--config', self.config_filename,
                '--format', 'json',
                key_name]
-        cmd.extend(map(lambda *env_var: '='.join(*env_var),
-                       self.environment.iteritems()))
+        cmd.extend(list(map(lambda *env_var: '='.join(*env_var),
+                        iter(self.environment.items()))))
         return cmd
 
     def _hiera(self, key_name):
@@ -108,7 +108,7 @@ class HieraClient(object):
             raise hiera.exc.HieraError(
                 'Failed to retrieve key {0}. exit code: {1} '
                 'message: {2} console output: {3}'.format(
-                    key_name, ex.returncode, ex.message, ex.output))
+                    key_name, ex.returncode, ex, ex.output))
         else:
             try:
                 value = json.loads(output.strip())
@@ -116,7 +116,7 @@ class HieraClient(object):
                 raise hiera.exc.HieraError(
                     'Failed to convert hiera output {0} for key {1}. '
                     'message: {2}'.format(
-                        output.strip(), key_name, ex.message))
+                        output.strip(), key_name, ex))
             if not value:
                 return None
             else:
