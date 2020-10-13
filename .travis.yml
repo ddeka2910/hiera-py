@@ -1,3 +1,7 @@
+os: linux
+arch:
+ - amd64
+ - ppc64le
 language: python
 python:
   - "2.7"
@@ -9,5 +13,10 @@ script:
 notifications:
   email: thomas.vandoren@gmail.com
 matrix:
+  exclude:
+  - arch: ppc64le
+    python: "3.3"  
+  - arch: ppc64le
+    python: "pypy"  
   allow_failures:
     - python: "3.3"
