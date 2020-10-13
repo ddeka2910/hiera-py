@@ -13,10 +13,5 @@ script:
 notifications:
   email: thomas.vandoren@gmail.com
 matrix:
-  exclude:
-  - arch: ppc64le
-    python: "3.3"  
-  - arch: ppc64le
-    python: "pypy"  
   allow_failures:
     - python: "3.3"
